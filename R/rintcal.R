@@ -8,7 +8,7 @@
 #' @importFrom utils read.table write.table packageName
 #' @importFrom stats approx dnorm median weighted.mean
 #' @importFrom grDevices rgb extendrange
-#' @importFrom graphics axis par legend lines points polygon segments text
+#' @importFrom graphics axis par legend lines points polygon segments text mtext
 #' @importFrom data.table fread fwrite
 #' @importFrom jsonlite fromJSON toJSON
 #' @name rintcal
@@ -16,7 +16,13 @@ NULL
 
 # todo: consider adding smoothing (as in calib.org), solve bug where options are thought to be part of plotting parameters (probably to do with ", ..."), make a table function, prepare calib function with MCMC ccurve
 
-# done:
+# done: added a draw.D14C function, added Joy Division plot to vignette
+
+# during package development, the data/intcal.rda file was written as such:
+# intcal <- rintcal::intcal.read.data(TRUE) # download from the server
+# save(intcal, file="~/Dropbox/devsoftware/rintcal/data/intcal.rda")
+# tools::resaveRdaFiles("~/Dropbox/devsoftware/rintcal/data/intcal.rda") # to compress
+
 
 # internal functions to speed up reading and writing files, using the data.table R package if present
 fastread <- function(fl, ...)
@@ -102,27 +108,27 @@ new.ccdir <- function(cc.dir) {
 #' @references
 #' Hammer and Levin 2017, "Monthly mean atmospheric D14CO2 at Jungfraujoch and Schauinsland from 1986 to 2016", heiDATA: Heidelberg Research Data Repository V2 \doi{10.11588/data/10100} 
 #'
-#' Hogg et al. 2013 SHCal13 Southern Hemisphere Calibration, 0–50,000 Years cal BP. Radiocarbon 55, 1889-1903. \doi{10.2458/azu_js_rc.55.16783}
+#' Hogg et al. 2013 SHCal13 Southern Hemisphere Calibration, 0-50,000 Years cal BP. Radiocarbon 55, 1889-1903. \doi{10.2458/azu_js_rc.55.16783}
 #'
 #' Hogg et al. 2020 SHCal20 Southern Hemisphere calibration, 0-55,000 years cal BP. Radiocarbon 62. \doi{10.1017/RDC.2020.59}
 #'
 #' Hua et al. 2013 Atmospheric radiocarbon for the period 1950-2010. Radiocarbon 55(4), \doi{10.2458/azu_js_rc.v55i2.16177}
 #' 
-#' Hua et al. 2021 Atmospheric radiocarbon for the period 1950-2019. Radiocarbon in press,  \doi{10.1017/RDC.2021.95}
+#' Hua et al. 2022 Atmospheric radiocarbon for the period 1950-2019. Radiocarbon 64(4), 723-745, \doi{10.1017/RDC.2021.95}
 #'
 #' Hughen et al. 2020 Marine20-the marine radiocarbon age calibration curve (0-55,000 cal BP). Radiocarbon 62. \doi{10.1017/RDC.2020.68}
 #'
 #' Levin and Kromer 2004 "The tropospheric 14CO2 level in mid latitudes of the Northern Hemisphere" Radiocarbon 46, 1261-1272
 #'
-#' Reimer et al. 2004 IntCal04 terrestrial radiocarbon age calibration, 0–26 cal kyr BP. Radiocarbon 46, 1029–1058. \doi{10.1017/S0033822200032999}
+#' Reimer et al. 2004 IntCal04 terrestrial radiocarbon age calibration, 0-26 cal kyr BP. Radiocarbon 46, 1029-1058. \doi{10.1017/S0033822200032999}
 #'
-#' Reimer et al. 2009 IntCal09 and Marine09 radiocarbon age calibration curves, 0–50,000 years cal BP. Radiocarbon 51, 1111–1150. \doi{10.1017/S0033822200034202}
+#' Reimer et al. 2009 IntCal09 and Marine09 radiocarbon age calibration curves, 0-50,000 years cal BP. Radiocarbon 51, 1111-1150. \doi{10.1017/S0033822200034202}
 #'
-#' Reimer et al. 2013 IntCal13 and Marine13 radiocarbon age calibration curves 0–50,000 years cal BP. Radiocarbon 55, 1869–1887. \doi{10.2458/azu_js_rc.55.16947}
+#' Reimer et al. 2013 IntCal13 and Marine13 radiocarbon age calibration curves 0-50,000 years cal BP. Radiocarbon 55, 1869-1887. \doi{10.2458/azu_js_rc.55.16947}
 #'
-#' Reimer et al. 2020 The IntCal20 Northern Hemisphere radiocarbon age calibration curve (0–55 cal kBP). Radiocarbon 62, 725-757. \doi{10.1017/RDC.2020.41}
+#' Reimer et al. 2020 The IntCal20 Northern Hemisphere radiocarbon age calibration curve (0-55 cal kBP). Radiocarbon 62, 725-757. \doi{10.1017/RDC.2020.41}
 #'
-#' Stuiver et al. 1998 INTCAL98 radiocarbon age calibration, 24,000–0 cal BP. Radiocarbon 40, 1041-1083. \doi{10.1017/S0033822200019123}
+#' Stuiver et al. 1998 INTCAL98 radiocarbon age calibration, 24,000-0 cal BP. Radiocarbon 40, 1041-1083. \doi{10.1017/S0033822200019123}
 #' @export
 ccurve <- function(cc=1, postbomb=FALSE, cc.dir=NULL, resample=0) {
   if(postbomb) {

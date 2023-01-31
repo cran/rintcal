@@ -31,7 +31,7 @@ par(new=TRUE)
 plot(cc[,1]/1e3, (cc[,2]+cc[,3])/1e3, type="l", xaxt="n", yaxt="n", col=4, xlab="", ylab="")
 lines(cc[,1]/1e3, (cc[,2]-cc[,3])/1e3, col=4)
 axis(4, col=4, col.axis=4)
-mtext("14C kBP", 4, 1.7, col=4)
+mtext(expression(paste(""^{14}, "C kBP")), 4, 2, col=4)
 
 ## -----------------------------------------------------------------------------
 contaminate(5000, 20, .01, 1)
@@ -74,6 +74,13 @@ my.labels <- c("my", "very", "own", "simulated", "dates")
 draw.dates(dates, errors, depths, BCAD=TRUE, labels=my.labels, age.lim=c(0, 1800))
 
 ## ---- fig.width=4, fig.asp=1--------------------------------------------------
-plot(0, type="n", xlim=c(0, 1800), ylim=c(5,0), xlab="AD", ylab="dates")
+plot(300*1:5, 1:5, xlim=c(0, 1800), ylim=c(5,0), xlab="AD", ylab="dates")
 draw.dates(dates, errors, depths, BCAD=TRUE, add=TRUE, labels=my.labels, mirror=FALSE)
+
+## ---- fig.width=4, fig.asp=1--------------------------------------------------
+par(bg="black", mar=rep(1, 4))
+n <- 50; set.seed(1)
+draw.dates(rnorm(n, 2450, 30), rep(25, n), n:1,
+  mirror=FALSE, draw.base=FALSE, draw.hpd=FALSE, col="white",
+  threshold=1e-28, age.lim=c(2250, 2800), ex=.8)
 

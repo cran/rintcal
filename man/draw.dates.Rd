@@ -23,6 +23,7 @@ draw.dates(
   cal.hpd.col = rgb(0, 0.5, 0.5, 0.35),
   mirror = TRUE,
   up = FALSE,
+  draw.base = TRUE,
   col = rgb(0, 0, 1, 0.3),
   border = rgb(0, 0, 1, 0.5),
   cal.col = rgb(0, 0.5, 0.5, 0.35),
@@ -89,6 +90,8 @@ draw.dates(
 
 \item{up}{If mirror is set to FALSE, the distribution can be plotted up or down, depending on the direction of the axis.}
 
+\item{draw.base}{By default, the base of the calibrated distributions is plotted. This can be avoided by supplying \code{draw.base=FALSE} as an option.}
+
 \item{col}{Colour of the inside of the distribution}
 
 \item{border}{Colour of the border of the distribution}
@@ -133,7 +136,7 @@ draw.dates(
 
 \item{label.offset}{Offsets of the positions of the depths/labels, giving the x and y offsets. Defaults to c(0,0).}
 
-\item{label.adj}{Justification of the labels. Follows R's adj option: A value of ‘0’ produces left-justified text, ‘0.5’ (the default) centered text and ‘1’ right-justified text.}
+\item{label.adj}{Justification of the labels. Follows R's adj option: A value of "0" produces left-justified text, "0.5" (the default) centered text and "1" right-justified text.}
 
 \item{label.rot}{Rotation of the label. 0 by default (horizontal).}
 
