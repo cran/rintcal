@@ -28,7 +28,7 @@
 caldist <- function(age, error, cc=1, postbomb=FALSE, yrsteps=FALSE, cc.resample=FALSE, dist.res=200, threshold=1e-3, normal=TRUE, t.a=3, t.b=4, normalise=TRUE, BCAD=FALSE, rule=1, cc.dir=NULL) {
   # deal with cal BP and negative ages	
   if(cc == 0) { # no ccurve needed
-    xseq <- seq(age-5*error, age+5*error, length=1e3) # hard-coded values
+    xseq <- seq(age-8*error, age+8*error, length=2e3) # hard-coded values, hmmm
     cc <- cbind(xseq, xseq, rep(0, length(xseq)))
   } else {
     if(age < 0)
@@ -58,15 +58,15 @@ caldist <- function(age, error, cc=1, postbomb=FALSE, yrsteps=FALSE, cc.resample
   if(normalise)
     cal[,2] <- cal[,2]/sum(cal[,2])
   # remove years with very small probabilities on the extremes of the distribution
-  above <- which(cal[,2] >= threshold * max(cal[,2])) # relative to its peak
+  above <- which(cal[,2] >= (threshold * max(cal[,2]))) # relative to its peak
   cal <- cal[min(above):max(above),] # now does not necessarily sum to exactly 1 any more
 
   colnames(cal) <- c("cal BP", "prob")
   if(BCAD) {
-    cal[,1] <- 1950 - cal[,1]
+    yrs <- 1950 - cal[,1]
     colnames(cal)[1] <- "BC/AD"
-    if(0 %in% cal[,1])
-      cal <- cal[-which(cal[,1] == 0),] # 0 BC/AD does not exist
+    yrs[yrs<=0] <- yrs[yrs<=0] - 1 # 0 BC/AD does not exist
+    cal[,1] <- yrs
   }
 
   return(cal)

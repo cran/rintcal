@@ -20,6 +20,11 @@ draw.ccurve(1600, 2020, BCAD=TRUE, cc2='nh1', add.yaxis=TRUE)
 intcal.data(0, 500)
 
 ## ---- fig.width=5, fig.asp=1--------------------------------------------------
+dat <- intcal.data(20e3, 25e3)
+unique(dat$set)
+dat <- intcal.data(20e3, 25e3, select.sets=c(109, 120), data.cols=c(1,2))
+
+## ---- fig.width=5, fig.asp=1--------------------------------------------------
 libby <- read.table(file.path(system.file(package = 'rintcal'), "extdata/Arnold_Libby_1951.txt"), header=T, sep=",")
 plot(libby[,2], libby[,4], xlab="'cal' BP", ylab="C14 BP") # plot the radiocarbon dates and their known calendar ages
 segments(libby[,2]-libby[,3], libby[,4], libby[,2]+libby[,3], libby[,4]) # calendar error bars (not all are quantified)

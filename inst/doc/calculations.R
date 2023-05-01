@@ -48,6 +48,9 @@ contam.col <- rainbow(length(contam.legend)-1)
 text(50e3, contaminate(50e3, c(), contam.legend, 1), 
   labels=contam.legend, col=contam.col, cex=.7, offset=0, adj=c(0,.8))
 
+## ---- fig.width=6, fig.asp=.8-------------------------------------------------
+draw.contamination()
+
 ## ---- fig.width=4, fig.asp=.8-------------------------------------------------
 calib.130 <- caldist(130, 20, BCAD=TRUE)
 plot(calib.130, type="l")

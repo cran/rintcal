@@ -7,21 +7,27 @@
 #' @author Maarten Blaauw <maarten.blaauw@qub.ac.uk>
 #' @importFrom utils read.table write.table packageName
 #' @importFrom stats approx dnorm median weighted.mean
-#' @importFrom grDevices rgb extendrange
-#' @importFrom graphics axis par legend lines points polygon segments text mtext
+#' @importFrom grDevices rgb extendrange grey rainbow
+#' @importFrom graphics axis par legend lines points polygon segments text mtext abline image
 #' @importFrom data.table fread fwrite
 #' @importFrom jsonlite fromJSON toJSON
 #' @name rintcal
 NULL
 
-# todo: consider adding smoothing (as in calib.org), solve bug where options are thought to be part of plotting parameters (probably to do with ", ..."), make a table function, prepare calib function with MCMC ccurve
+# todo: write more detail as to what can be found in the intcal.data.frames, allow for draw.contaminate with contam.F14C<1, add smoothing (as in calib.org), solve bug where options are thought to be part of plotting parameters (probably to do with ", ..."), make a table function, prepare calib function with MCMC ccurve
 
-# done: added a draw.D14C function, added Joy Division plot to vignette
+# todo: make package 'howmany' (or such), including accumulate (to make sediment records, with e.g. random walk, a function, reading from a file, ...), simulate dating (extrapolation, scatter, outliers, ccurves, offsets; random depths, Andres's code, equal spacing), write Bacon/clam/bchron/oxcal files, cost/benefit plots, proxy simulator
 
 # during package development, the data/intcal.rda file was written as such:
 # intcal <- rintcal::intcal.read.data(TRUE) # download from the server
 # save(intcal, file="~/Dropbox/devsoftware/rintcal/data/intcal.rda")
 # tools::resaveRdaFiles("~/Dropbox/devsoftware/rintcal/data/intcal.rda") # to compress
+# some platforms complain about non-ASCII characters in the datafilestringi::stri_enc_mark
+
+# stringi::stri_enc_mark(intcal)
+# [1] "ASCII"  "native" "ASCII"  "ASCII"  "native" "ASCII" 
+# stringi::stri_enc_mark(intcal[[2]]) shows which entries contain non-ASCII chars
+
 
 
 # internal functions to speed up reading and writing files, using the data.table R package if present
@@ -231,16 +237,20 @@ ccurve <- function(cc=1, postbomb=FALSE, cc.dir=NULL, resample=0) {
 #' @param name Name of the new calibration curve.
 #' @param cc.dir Name of the directory where to save the file. Since R does not allow automatic saving of files, this points to a temporary directory by default. Adapt to your own folder, e.g., \code{cc.dir="~/ccurves"} or in your current working directory, \code{cc.dir="."}.
 #' @param save Save the curve in the folder specified by dir. Defaults to FALSE.
-#' @param offset Any offset and error to be applied to \code{cc2} (default 0 +- 0).
+#' @param offset Any offset and error to be applied to \code{cc2} (default 0 +- 0). Entered as two columns (possibly of just one row).
 #' @param sep Separator between fields (tab by default, "\\t")
 #' @return A file containing the custom-made calibration curve, based on calibration curves \code{cc1} and \code{cc2}.
 #' @examples
 #' tmpdir <- tempdir()
 #' mix.ccurves(cc.dir=tmpdir)
+#' # now assume the offset is constant but its uncertainty increases over time:
+#' cc <- ccurve()
+#' offset <- cbind(rep(100, nrow(cc)),  seq(0, 1e3, length=nrow(cc)))
+#  mix.ccurves(cc.dir=tmpdir, offset=offset)
 #' # clean up:
 #' unlink(tmpdir)
 #' @export
-mix.ccurves <- function(proportion=.5, cc1="IntCal20", cc2="Marine20", name="mixed.14C", cc.dir=c(), save=FALSE, offset=c(0,0), sep="\t") {
+mix.ccurves <- function(proportion=.5, cc1="IntCal20", cc2="Marine20", name="mixed.14C", cc.dir=c(), save=FALSE, offset=cbind(0,0), sep="\t") {
   # place the IntCal curves within the same folder as the new curve:
   if(length(cc.dir) == 0)
      cc.dir <- tempdir()
@@ -249,9 +259,9 @@ mix.ccurves <- function(proportion=.5, cc1="IntCal20", cc2="Marine20", name="mix
 
   cc1 <- ccurve(cc1)
   cc2 <- ccurve(cc2)
-  cc2.mu <- approx(cc2[,1], cc2[,2], cc1[,1], rule=2)$y + offset[1] # interpolate cc2 to the calendar years of cc1
+  cc2.mu <- approx(cc2[,1], cc2[,2], cc1[,1], rule=2)$y + offset[,1] # interpolate cc2 to the calendar years of cc1
   cc2.error <- approx(cc2[,1], cc2[,3], cc1[,1], rule=2)$y
-  cc2.error <- sqrt(cc2.error^2 + offset[2]^2)
+  cc2.error <- sqrt(cc2.error^2 + offset[,2]^2)
   mu <- proportion * cc1[,2] + (1-proportion) * cc2.mu
   error <- proportion * cc1[,3] + (1-proportion) * cc2.error
 

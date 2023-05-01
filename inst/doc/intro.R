@@ -29,7 +29,7 @@ plot(Bristle_yearly[,1], Bristle_yearly[,2], xlab="cal BP", ylab="C14 BP")
 segments(Bristle_yearly[,1], Bristle_yearly[,2]-Bristle_yearly[,3], Bristle_yearly[,1], Bristle_yearly[,2]+Bristle_yearly[,3])
 
 ## -----------------------------------------------------------------------------
-mix.ccurves(0.4, cc1="IntCal20", cc2="Marine20", offset=c(100, 20))
+mix.ccurves(0.4, cc1="IntCal20", cc2="Marine20", offset=cbind(100, 20))
 
 ## ---- fig.width=4, fig.asp=.8-------------------------------------------------
 glued <- glue.ccurves("IntCal20", "NH1")
