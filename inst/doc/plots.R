@@ -5,7 +5,7 @@ require(rintcal)
 draw.ccurve()
 
 ## ---- fig.width=4, fig.asp=.8-------------------------------------------------
-draw.ccurve(1600, 2020, BCAD=TRUE, cc2='nh1', add.yaxis=TRUE)
+draw.ccurve(1000, 2020, BCAD=TRUE, cc2='marine20', add.yaxis=TRUE)
 
 ## ---- fig.width=4, fig.asp=.8-------------------------------------------------
 draw.ccurve(1600, 1950, BCAD=TRUE)
