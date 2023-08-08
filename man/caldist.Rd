@@ -9,6 +9,7 @@ caldist(
   error,
   cc = 1,
   postbomb = FALSE,
+  thiscurve = c(),
   yrsteps = FALSE,
   cc.resample = FALSE,
   dist.res = 200,
@@ -30,6 +31,8 @@ caldist(
 \item{cc}{Calibration curve to use. Defaults to IntCal20 (\code{cc=1}).}
 
 \item{postbomb}{Whether or not to use a postbomb curve. Required for negative radiocarbon ages.}
+
+\item{thiscurve}{As an alternative to providing cc and/or postbomb, the data of a specific curve can be provided (3 columns: cal BP, C14 age, error). Defaults to FALSE.}
 
 \item{yrsteps}{Steps to use for interpolation. Defaults to the cal BP steps in the calibration curve}
 
@@ -60,7 +63,7 @@ The probability distribution(s) as two columns: cal BP ages and their associated
 Calculate the calibrated distribution of a radiocarbon date.
 }
 \examples{
-calib <- caldist(130,20)
+calib <- caldist(130,10)
 plot(calib, type="l")
-postbomb <- caldist(-3030, 20, "nh1", BCAD=TRUE)
+postbomb <- caldist(-3030, 20, postbomb=1, BCAD=TRUE)
 }

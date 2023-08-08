@@ -130,17 +130,17 @@ draw.ccurve <- function(cal1=c(), cal2=c(), cc1="IntCal20", cc2=NA, cc1.postbomb
 #' Type \code{calibrate()} to see how a date of 2450 +- 50 14C BP gets calibrated (the calibration curve happens to show
 #' a plateau around this 14C age). To calibrate a different date, provide its reported mean and error (1
 #' standard deviation error as reported by the radiocarbon laboratory) as follows: \code{calibrate(mean, error)},
-#' e.g., for a date of 130 +- 20 14C BP, type calibrate\code{(age=130, error=20)} or, shorter, \code{calibrate(130,20)}.
+#' e.g., for a date of 130 +- 10 14C BP, type calibrate\code{(age=130, error=10)} or, shorter, \code{calibrate(130,10)}.
 #'
 #' In case the date has a reservoir effect or age offset, e.g. of 100 14C years, provide this as follows:
-#' \code{calibrate(130, 20, reservoir=100)}. If you want to include an uncertainty for this offset, provide this as follows,
-#' e.g., for an uncertainty of 50yr, \code{calibrate(130,20,reservoir=c(100, 50))}.
+#' \code{calibrate(130, 10, reservoir=100)}. If you want to include an uncertainty for this offset, provide this as follows,
+#' e.g., for an uncertainty of 50yr, \code{calibrate(130,10,reservoir=c(100, 50))}.
 #' The uncertainty for the age offset will then be added to the error (by taking the square root of the sum
 #' of the squared error and the squared offset uncertainty). If the carbon of your sample has mixed marine/terrestrial sources,
 #' instead apply the marine offset using mix.curves and calibrate the date using that custom-built curve (cc="mixed").
 #'
 #' If you prefer to work with, e.g., 68 \% as opposed to the default 95 \% confidence intervals,
-#' type: \code{calibrate(130, 20, prob=0.68)} or \code{calibrate(130, 20,, 0.68)} (the commas between the brackets indicate the position of the option;
+#' type: \code{calibrate(130, 10, prob=0.68)} or \code{calibrate(130, 10,, 0.68)} (the commas between the brackets indicate the position of the option;
 #' the standard deviation is the fourth option of the \code{calibrate} function). The calibrated distribution can be calculated
 #' for every single calendar year (\code{yrsteps=1}) within a wide range of the 14C date. Probabilities below a threshold (default \code{threshold=0.0005}) will be neglected.
 #'
@@ -223,11 +223,11 @@ draw.ccurve <- function(cal1=c(), cal2=c(), cc1="IntCal20", cc2=NA, cc1.postbomb
 #' @return A graph of the raw and calibrated C-14 date, the calibrated ranges and, invisibly, the calibrated distribution and hpd ranges.
 #' @examples
 #' calibrate()
-#' calibrate(130, 20)
+#' calibrate(130, 10)
 #' cal <- calibrate(2550, 20, reservoir=100)
 #' cal; plot(cal[[1]])
-#' calibrate(130, 20, prob=0.68)
-#' calibrate(age=130, error=20, BCAD=TRUE)
+#' calibrate(130, 10, prob=0.68)
+#' calibrate(age=130, error=10, BCAD=TRUE)
 #' calibrate(4450, 40, reservoir=c(100, 50))
 #' @export
 calibrate <- function(age=2450, error=50, cc=1, postbomb=FALSE, reservoir=0, prob=0.95, BCAD=FALSE, ka=FALSE, cal.lab=c(), C14.lab=c(), cal.lim=c(), C14.lim=c(), cc.col=rgb(0,.5,0,0.7), cc.fill=rgb(0,.5,0,0.7), date.col="red", dist.col=rgb(0,0,0,0.2), dist.fill=rgb(0,0,0,0.2), hpd.fill=rgb(0,0,0,0.3), dist.height=0.3, dist.float=c(.01, .01), cal.rev=FALSE, yr.steps=FALSE, threshold=0.0005, edge=TRUE, normal=TRUE, t.a=3, t.b=4, rounded=1, extend.range=.05, legend.cex=0.8, legend1.loc="topleft", legend2.loc="topright", mgp=c(2,1,0), mar=c(3,3,1,1), xaxs="i", yaxs="i", bty="l", cc.dir=NULL, ...) {
@@ -235,17 +235,23 @@ calibrate <- function(age=2450, error=50, cc=1, postbomb=FALSE, reservoir=0, pro
   age <- age-reservoir[1]
   if(length(reservoir) > 1)
     error <- sqrt(error^2 + reservoir[2]^2)
-  Cc <- ccurve(cc, postbomb, cc.dir)
+  youngest.cc <- c(95,603,118,0,0) # youngest C14 ages of IntCal20, Marine20, SHCal20, and extra entries
+  if((age - (3*error)) < youngest.cc[cc]) { # at or beyond younger IntCal limit 
+    if(!postbomb) # note that there are no postbomb curves for Marine20
+      if(!(cc %in% c("nh1", "nh2", "nh3", "sh1-2", "sh3")))
+        stop("This appears to be a postbomb age (or is close to being one). Please provide a postbomb curve")
+	Cc <- glue.ccurves(cc, postbomb, cc.dir) # doesn't do resample
+  } else {
+      if(postbomb > 0) # postbomb has been defined
+        Cc <- glue.ccurves(cc, postbomb, cc.dir) else
+          Cc <- ccurve(cc, postbomb=FALSE, cc.dir)
+    }
+
   cc.cal <- 1
   if(BCAD) {
     Cc[,4] <- 1950 - Cc[,1]
     cc.cal <- 4
   }
-
-  if((age - 3*error) < 0)
-    if(!postbomb)
-      if(!(cc %in% c("nh1", "nh2", "nh3", "sh1-2", "sh3")))
-        stop("This appears to be a postbomb age (or is close to being one). Please provide a postbomb curve")
 
   # warn/stop if the date lies (partly) beyond the calibration curve
   if(edge) {
@@ -267,11 +273,11 @@ calibrate <- function(age=2450, error=50, cc=1, postbomb=FALSE, reservoir=0, pro
   C14.hpd <- hpd(C14.dist, return.raw=TRUE)[[1]]
   C14.hpd <- C14.hpd[which(C14.hpd[,3] == 1),1:2] # extract only the values within the hpd
   C14.hpd <- rbind(c(C14.hpd[1,1],0), C14.hpd, c(C14.hpd[nrow(C14.hpd),1],0))
-  dat <- caldist(age, error, cc=cc, yrsteps=yr.steps, threshold=threshold, 
-    normal=normal, t.a=t.a, t.b=t.b, BCAD=FALSE, postbomb=postbomb, cc.dir=cc.dir)
   if(BCAD)
     dat <- caldist(age, error, cc=cc, yrsteps=yr.steps, threshold=threshold, 
-  normal=normal, t.a=t.a, t.b=t.b, BCAD=TRUE, postbomb=postbomb, cc.dir=cc.dir) 
+  normal=normal, t.a=t.a, t.b=t.b, BCAD=TRUE, postbomb=postbomb, cc.dir=cc.dir) else
+      dat <- caldist(age, error, thiscurve=Cc, cc=cc, yrsteps=yr.steps, threshold=threshold, 
+        normal=normal, t.a=t.a, t.b=t.b, BCAD=FALSE, postbomb=postbomb, cc.dir=cc.dir)
 
   cal.hpd <- hpd(dat, prob=prob, return.raw=TRUE, rounded=rounded)
   hpds <- cal.hpd[[2]]
