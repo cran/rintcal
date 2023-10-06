@@ -1,3 +1,10 @@
+# rintcal 0.6.4
+* mix.ccurves now doesn't fail if a provided cc.dir folder does not yet exist
+* mix.ccurves now saves the calibration curves with values separated by a single space, not by a tab
+* as per Kurt Hornik's e-mail, added a sentinal "_PACKAGE" to the documentation
+* as per Prof. Brian Ripley's e-mail, removed permille sign of draw.D14C function as graphics devices such as of OSX do not always draw them
+* some minor changes to how postbomb dates are treated and plotted
+
 # rintcal 0.6.3
 * further enhancements to functions ccurves, calibrate and caldist, especially for young dates close to the prebomb limits
 * updated vignette

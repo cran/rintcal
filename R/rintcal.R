@@ -1,22 +1,7 @@
-#' rintcal
-#'
-#' @description The international IntCal research group publishes ratified radiocarbon calibration curves such as IntCal20, Marine20 and SHCal20 (Reimer et al. 2020).
-#' This data package provides the files of these curves, for use by other R package (reducing the need for replication and the size of other packages that use IntCal curves).
-#' It also comes with functions to read in calibration curves, plot curves or dates, translate pMC ages to 14C ages (et vice versa), etc. 
-#' @docType package
-#' @author Maarten Blaauw <maarten.blaauw@qub.ac.uk>
-#' @importFrom utils read.table write.table packageName
-#' @importFrom stats approx dnorm median weighted.mean
-#' @importFrom grDevices rgb extendrange grey rainbow
-#' @importFrom graphics axis par legend lines points polygon segments text mtext abline image
-#' @importFrom data.table fread fwrite
-#' @importFrom jsonlite fromJSON toJSON
-#' @name rintcal
-NULL
 
 # todo: write more detail as to what can be found in the intcal.data.frames, allow for draw.contaminate with contam.F14C<1, add smoothing (as in calib.org), solve bug where options are thought to be part of plotting parameters (probably to do with ", ..."), make a table function, prepare calib function with MCMC ccurve
 
-# done: dates close to 0 14C BP now use both prebomb and postbomb curves
+# done: mix.ccurves now doesn't fail if a provided cc.dir folder does not yet exist. By default mix.ccurves now saves the calibration curves with values separated by a single space, not by a tab.
 
 # todo: make package 'howmany' (or such), including accumulate (to make sediment records, with e.g. random walk, a function, reading from a file, ...), simulate dating (extrapolation, scatter, outliers, ccurves, offsets; random depths, Andres's code, equal spacing), write Bacon/clam/bchron/oxcal files, cost/benefit plots, proxy simulator
 
@@ -151,13 +136,23 @@ ccurve <- function(cc=1, postbomb=FALSE, cc.dir=NULL, resample=0, glue=FALSE) {
             fl <- "postbomb_SH1-2.14C" else
             if(cc==5 || tolower(cc) == "sh3")
               fl <- "postbomb_SH3.14C" else
-              if(tolower(cc) == "kure")
-                fl <- "Kure.14C" else
-                if(tolower(cc) == "levinkromer")
-                  fl <- "LevinKromer.14C" else
-                  if(tolower(cc) == "santos")
-                    fl <- "Santos.14C" else
-                      stop("cannot find this postbomb curve\n", call.=FALSE)
+              if(tolower(cc) == "nh1_monthly")
+                fl <- "postbomb_NH1_monthly.14C" else
+                if(tolower(cc) == "nh2_monthly")
+                  fl <- "postbomb_NH2_monthly.14C" else
+                  if(tolower(cc) == "nh3_monthly")
+                    fl <- "postbomb_NH3_monthly.14C" else
+                    if(tolower(cc) == "sh1-2_monthly")
+                      fl <- "postbomb_SH1-2_monthly.14C" else
+                      if(tolower(cc) == "sh3_monthly")
+                        fl <- "postbomb_SH3_monthly.14C" else
+                        if(tolower(cc) == "kure")
+                          fl <- "Kure.14C" else
+                          if(tolower(cc) == "levinkromer")
+                            fl <- "LevinKromer.14C" else
+                            if(tolower(cc) == "santos")
+                            fl <- "Santos.14C" else
+                              stop("cannot find this postbomb curve\n", call.=FALSE)
   } else
     if(cc==1 || tolower(cc) == "intcal20")
       fl <- "3Col_intcal20.14C" else
@@ -243,6 +238,7 @@ ccurve <- function(cc=1, postbomb=FALSE, cc.dir=NULL, resample=0, glue=FALSE) {
 #' @param cc.dir Name of the directory where to save the file. Since R does not allow automatic saving of files, this points to a temporary directory by default. Adapt to your own folder, e.g., \code{cc.dir="~/ccurves"} or in your current working directory, \code{cc.dir="."}.
 #' @param save Save the curve in the folder specified by dir. Defaults to FALSE.
 #' @param offset Any offset and error to be applied to \code{cc2} (default 0 +- 0). Entered as two columns (possibly of just one row).
+#' @param round The entries can be rounded to a specified amount of decimals. Defaults to no rounding.
 #' @param sep Separator between fields (tab by default, "\\t")
 #' @return A file containing the custom-made calibration curve, based on calibration curves \code{cc1} and \code{cc2}.
 #' @examples
@@ -255,10 +251,12 @@ ccurve <- function(cc=1, postbomb=FALSE, cc.dir=NULL, resample=0, glue=FALSE) {
 #' # clean up:
 #' unlink(tmpdir)
 #' @export
-mix.ccurves <- function(proportion=.5, cc1="IntCal20", cc2="Marine20", name="mixed.14C", cc.dir=c(), save=FALSE, offset=cbind(0,0), sep="\t") {
+mix.ccurves <- function(proportion=.5, cc1="IntCal20", cc2="Marine20", name="mixed.14C", cc.dir=c(), save=FALSE, offset=cbind(0,0), round=c(), sep=" ") {
   # place the IntCal curves within the same folder as the new curve:
   if(length(cc.dir) == 0)
-     cc.dir <- tempdir()
+    cc.dir <- tempdir()
+  if(!dir.exists(cc.dir))
+    dir.create(cc.dir)
   curves <- list.files(system.file("extdata", package='rintcal'), pattern=".14C", full.names=TRUE)
   file.copy(curves, cc.dir)
 
@@ -271,6 +269,8 @@ mix.ccurves <- function(proportion=.5, cc1="IntCal20", cc2="Marine20", name="mix
   error <- proportion * cc1[,3] + (1-proportion) * cc2.error
 
   mycc <- cbind(cc1[,1], mu, error)
+  if(length(round) > 0)
+    mycc <- round(mycc)
 
   if(save) {
     fastwrite(mycc, file.path(cc.dir, name), row.names=FALSE, col.names=FALSE, sep=sep)
