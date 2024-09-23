@@ -11,6 +11,7 @@ intcal.data(
   cc2 = NA,
   calcurve.data = "IntCal20",
   select.sets = c(),
+  realm = "C14",
   BCAD = FALSE,
   cal.lab = NA,
   cal.rev = FALSE,
@@ -45,6 +46,8 @@ intcal.data(
 \item{calcurve.data}{Which dataset to use. Defaults to \code{calcurve.data="IntCal20"}, but can also be \code{calcurve.data="SHCal20"}. Note that Marine20 is based on IntCal20 and a marine carbon cycle model.}
 
 \item{select.sets}{Which datasets to plot. Defaults to all datasets within the selected period.}
+
+\item{realm}{Which 'realm' of radiocarbon to use. Defaults to \code{realm="C14"} but can also be set to \code{realm="F14C"}, \code{realm="pMC"} or \code{realm="D14C"}. Can be shorted to, respectively, "C", "F", "P" or "D" (or their lower-case equivalents).}
 
 \item{BCAD}{The calendar scale of graphs and age output-files is in cal BP (calendar or calibrated years before the present, where the present is AD 1950) by default, but can be changed to BC/AD using \code{BCAD=TRUE}.}
 
@@ -105,7 +108,7 @@ The southern hemisphere calibration curve SHCal20 is mostly modelled on IntCal20
   # plot Suigetsu and Cariaco data only
   dat <- intcal.data(20e3, 25e3)
   unique(dat$set) # ordered against their appearance in the plot's legend
-  dat <- intcal.data(20e3, 25e3, selectsets=c(109, 120), data.cols=c(1,2))
+  dat <- intcal.data(20e3, 25e3, select.sets=c(109, 120), data.cols=c(1,2))
 }
 \references{
 [1]Stuiver, M, and Braziunas, TF. 1993. Sun, ocean, climate and atmospheric 14CO2: an evaluation of causal and spectral relationships. Holocene 3: 289-305.
