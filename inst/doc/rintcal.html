@@ -413,7 +413,7 @@ before the function name, e.g.:</p>
 <p>To get a list of available curves and associated files (and where
 they can be found):</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">list.ccurves</span>()</span></code></pre></div>
-<pre><code>## /tmp/RtmpiNPWKB/Rinst654a51fc5063/rintcal/extdata/</code></pre>
+<pre><code>## /tmp/RtmpTFsPPK/Rinst2307d858c16b/rintcal/extdata/</code></pre>
 <pre><code>##  [1] &quot;3Col_intcal04.14C&quot;          &quot;3Col_intcal09.14C&quot;         
 ##  [3] &quot;3Col_intcal13.14C&quot;          &quot;3Col_intcal20.14C&quot;         
 ##  [5] &quot;3Col_intcal98.14C&quot;          &quot;3Col_marine04.14C&quot;         
@@ -421,17 +421,19 @@ they can be found):</p>
 ##  [9] &quot;3Col_marine20.14C&quot;          &quot;3Col_marine98.14C&quot;         
 ## [11] &quot;3Col_shcal13.14C&quot;           &quot;3Col_shcal20.14C&quot;          
 ## [13] &quot;Arnold_Libby_1951.txt&quot;      &quot;Kure.14C&quot;                  
-## [15] &quot;LevinKromer.14C&quot;            &quot;Santos.14C&quot;                
-## [17] &quot;intcal20_data.txt&quot;          &quot;intcal20_data_sources.txt&quot; 
-## [19] &quot;postbomb_NH1.14C&quot;           &quot;postbomb_NH1_2009.14C&quot;     
-## [21] &quot;postbomb_NH1_monthly.14C&quot;   &quot;postbomb_NH2.14C&quot;          
-## [23] &quot;postbomb_NH2_2009.14C&quot;      &quot;postbomb_NH2_monthly.14C&quot;  
-## [25] &quot;postbomb_NH3.14C&quot;           &quot;postbomb_NH3_2009.14C&quot;     
-## [27] &quot;postbomb_NH3_monthly.14C&quot;   &quot;postbomb_SH1-2.14C&quot;        
-## [29] &quot;postbomb_SH1-2_2009.14C&quot;    &quot;postbomb_SH1-2_monthly.14C&quot;
-## [31] &quot;postbomb_SH3.14C&quot;           &quot;postbomb_SH3_2009.14C&quot;     
-## [33] &quot;postbomb_SH3_monthly.14C&quot;   &quot;shcal20_data.txt&quot;          
-## [35] &quot;shcal20_data_sources.txt&quot;</code></pre>
+## [15] &quot;LevinKromer.14C&quot;            &quot;NOTCal04.14C&quot;              
+## [17] &quot;Santos.14C&quot;                 &quot;intcal20.14c&quot;              
+## [19] &quot;intcal20_data.txt&quot;          &quot;intcal20_data_sources.txt&quot; 
+## [21] &quot;marine20.14c&quot;               &quot;postbomb_NH1.14C&quot;          
+## [23] &quot;postbomb_NH1_2009.14C&quot;      &quot;postbomb_NH1_monthly.14C&quot;  
+## [25] &quot;postbomb_NH2.14C&quot;           &quot;postbomb_NH2_2009.14C&quot;     
+## [27] &quot;postbomb_NH2_monthly.14C&quot;   &quot;postbomb_NH3.14C&quot;          
+## [29] &quot;postbomb_NH3_2009.14C&quot;      &quot;postbomb_NH3_monthly.14C&quot;  
+## [31] &quot;postbomb_SH1-2.14C&quot;         &quot;postbomb_SH1-2_2009.14C&quot;   
+## [33] &quot;postbomb_SH1-2_monthly.14C&quot; &quot;postbomb_SH3.14C&quot;          
+## [35] &quot;postbomb_SH3_2009.14C&quot;      &quot;postbomb_SH3_monthly.14C&quot;  
+## [37] &quot;shcal20.14c&quot;                &quot;shcal20_data.txt&quot;          
+## [39] &quot;shcal20_data_sources.txt&quot;</code></pre>
 <div id="libbys-curve" class="section level3" number="3.1.1">
 <h3><span class="header-section-number">3.1.1</span> Libby’s curve</h3>
 <p>Legacy calibration data such as Arnold &amp; Libby (1951) can be
@@ -502,7 +504,7 @@ mixed.14C, in a folder together with the calibration curves. The name of
 this folder is listed, and it can be changed by specifying the option
 ‘cc.dir’.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">mix.ccurves</span>(<span class="fl">0.4</span>, <span class="at">cc1=</span><span class="st">&quot;IntCal20&quot;</span>, <span class="at">cc2=</span><span class="st">&quot;Marine20&quot;</span>, <span class="at">offset=</span><span class="fu">cbind</span>(<span class="dv">100</span>, <span class="dv">20</span>), <span class="at">save=</span><span class="cn">TRUE</span>, <span class="at">cc.dir=</span><span class="fu">tempdir</span>())</span></code></pre></div>
-<pre><code>## mixed.14C saved in folder /tmp/RtmpBriY0V</code></pre>
+<pre><code>## mixed.14C saved in folder /tmp/Rtmpa25HuQ</code></pre>
 <p>To glue prebomb and postbomb calibration curves into one and store it
 as a variable in your session (for example, IntCal20 and the NH1
 postbomb curve):</p>
