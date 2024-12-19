@@ -51,7 +51,9 @@ dat <- intcal.data(20e3, 25e3, select.sets=c(109, 120), data.cols=c(1,2))
 intcal.data(20e3, 25e3, realm="d")
 
 ## -----------------------------------------------------------------------------
-mix.ccurves(0.4, cc1="IntCal20", cc2="Marine20", offset=cbind(100, 20), save=TRUE, cc.dir=tempdir())
+mydir <- tempdir()
+# new.ccdir(mydir)
+mix.ccurves(0.4, cc1="IntCal20", cc2="Marine20", offset=cbind(100, 20), save=TRUE, cc.dir=mydir)
 
 ## ----fig.width=4, fig.asp=.8--------------------------------------------------
 glued <- glue.ccurves("IntCal20", "NH1")
