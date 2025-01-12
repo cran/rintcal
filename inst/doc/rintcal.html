@@ -413,7 +413,7 @@ before the function name, e.g.:</p>
 <p>To get a list of available curves and associated files (and where
 they can be found):</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">list.ccurves</span>()</span></code></pre></div>
-<pre><code>## /private/var/folders/w_/ktch6mh953z13lmhs4_9bj_80000gn/T/RtmpT3rhxo/Rinstae644082810d/rintcal/extdata/</code></pre>
+<pre><code>## /private/var/folders/w_/ktch6mh953z13lmhs4_9bj_80000gn/T/Rtmpl6J9Zd/Rinst183273cbe8b30/rintcal/extdata/</code></pre>
 <pre><code>##  [1] &quot;3Col_intcal04.14C&quot;          &quot;3Col_intcal09.14C&quot;         
 ##  [3] &quot;3Col_intcal13.14C&quot;          &quot;3Col_intcal20.14C&quot;         
 ##  [5] &quot;3Col_intcal98.14C&quot;          &quot;3Col_marine04.14C&quot;         
@@ -506,7 +506,7 @@ this folder is listed, and it can be changed by specifying the option
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>mydir <span class="ot">&lt;-</span> <span class="fu">tempdir</span>()</span>
 <span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="co"># new.ccdir(mydir)</span></span>
 <span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a><span class="fu">mix.ccurves</span>(<span class="fl">0.4</span>, <span class="at">cc1=</span><span class="st">&quot;IntCal20&quot;</span>, <span class="at">cc2=</span><span class="st">&quot;Marine20&quot;</span>, <span class="at">offset=</span><span class="fu">cbind</span>(<span class="dv">100</span>, <span class="dv">20</span>), <span class="at">save=</span><span class="cn">TRUE</span>, <span class="at">cc.dir=</span>mydir)</span></code></pre></div>
-<pre><code>## mixed.14C saved in folder /var/folders/w_/ktch6mh953z13lmhs4_9bj_80000gn/T//RtmpN0j8hs</code></pre>
+<pre><code>## mixed.14C saved in folder /var/folders/w_/ktch6mh953z13lmhs4_9bj_80000gn/T//RtmpxyWnDa</code></pre>
 <p>To glue prebomb and postbomb calibration curves into one and store it
 as a variable in your session (for example, IntCal20 and the NH1
 postbomb curve):</p>
