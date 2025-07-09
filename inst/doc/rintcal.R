@@ -50,6 +50,10 @@ dat <- intcal.data(20e3, 25e3, select.sets=c(109, 120), data.cols=c(1,2))
 ## ----fig.width=5, fig.asp=1---------------------------------------------------
 intcal.data(20e3, 25e3, realm="d")
 
+## ----fig.width=5, fig.asp=1---------------------------------------------------
+firstrecord <- intcal.extract.record(1)
+intcal.plot.record(1)
+
 ## -----------------------------------------------------------------------------
 mydir <- tempdir()
 # new.ccdir(mydir)
