@@ -1,3 +1,10 @@
+# rintcal 1.4.2
+* added more detail regarding and references to available calibration curves in the documentation for `ccurve`.
+* the code within the `ccurve` function is now shorter and less repetitive.
+* new internal function (taken from the `rice` package) to deal more robustly with `BCAD` (and its `zero` option is added).
+* any functions that provide options for rounding, now default to as many decimals as possible (`decimals=Inf`).
+* `intcal.plot.record` now checks that the requested record number is an integer between 1 and 140 (which is the amount of IntCal20 datasets).
+
 # rintcal 1.4.1
 * `intcal.data` now plots D14C correctly when `BCAD=TRUE`.
 * `intcal.data` no longer truncates the second calibration curve if activated (e.g., `cc2=2`).

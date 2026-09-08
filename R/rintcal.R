@@ -30,6 +30,7 @@ fastwrite <- function(fl, ...)
 #' @name list.ccurves
 #' @title List the calibration curves
 #' @description List the file names of the calibration curves available within the rintcal package.
+#' For details such as references of the curves, see the documentation of the function `ccurve()`.
 #' @return A list of the available calibration curves
 #' @export
 list.ccurves <- function() {
@@ -80,7 +81,40 @@ new.ccdir <- function(cc.dir) {
 #' @name ccurve
 #' @title Copy a calibration curve
 #' @description Copy one of the calibration curves into memory.
-#' @details Copy the radiocarbon calibration curve defined by cc into memory.
+#' @details Copies the radiocarbon calibration curve defined by cc into memory.
+#' Available curves:
+#' \tabular{lll}{
+#'   name \tab shortcut \tab reference \cr
+#'   "IntCal20" \tab cc=1 \tab Reimer et al. 2020 \cr
+#'   "Marine20" \tab cc=2 \tab Heaton et al. 2020 \cr
+#'   "SHCal20" \tab cc=3 \tab Hogg et al. 2020 \cr
+#'   "nh1" \tab cc=1, postbomb=TRUE \tab Hua et al. 2022 \cr
+#'   "nh2" \tab cc=2, postbomb=TRUE \tab Hua et al. 2022 \cr
+#'   "nh3" \tab cc=3, postbomb=TRUE \tab Hua et al. 2022 \cr
+#'   "sh1-2" \tab cc=4, postbomb=TRUE \tab Hua et al. 2022 \cr
+#'   "sh3" \tab postbomb & 5 \tab Hua et al. 2022 \cr
+#'   "nh1_monthly" \tab \tab Hua et al. 2022 \cr
+#'   "nh2_monthly" \tab \tab Hua et al. 2022 \cr
+#'   "nh3_monthly" \tab \tab Hua et al. 2022 \cr
+#'   "sh1-2_monthly" \tab \tab Hua et al. 2022 \cr
+#'   "sh3_monthly" \tab \tab Hua et al. 2022 \cr
+#'   "kure" \tab \tab Andrews et al. 2016 \cr
+#'   "jungfraujoch" \tab \tab Hammer et al. 2017 \cr
+#'   "levinkromer" \tab \tab Levin & Kromer 2004 \cr
+#'   "intcal13" \tab \tab Reimer et al. 2013 \cr
+#'   "marine13" \tab \tab Reimer et al. 2013 \cr
+#'   "shcal13" \tab \tab Hogg et al. 2013 \cr
+#'   "intcal09" \tab \tab Reimer et al. 2009 \cr
+#'   "marine09" \tab \tab Reimer et al. 2009 \cr
+#'   "intcal04" \tab \tab Reimer et al. 2004 \cr
+#'   "marine04" \tab \tab Hughen et al. 2004 \cr
+#'   "notcal" \tab \tab van der Plicht et al. 2004 \cr
+#'   "intcal98" \tab \tab Stuiver et al. 1998 \cr
+#'   "marine98" \tab \tab Stuiver et al. 1998 \cr
+#'   "pearson_stuiver_1986" \tab \tab Pearson & Stuiver 1986 \cr
+#'   "stuiver_suess_1966" \tab \tab Stuiver & Suess 1966 \cr
+#'   "arnold_libby_1951" \tab \tab Arnold & Libby 1951 \cr
+#' }
 #' @return The calibration curve (invisible).
 #' @param cc Calibration curve for 14C dates: \code{cc=1} for IntCal20 (northern hemisphere terrestrial), \code{cc=2} for Marine20 (marine),
 #' \code{cc=3} for SHCal20 (southern hemisphere terrestrial). Alternatively, one can also write, e.g., "IntCal20", "Marine13". 
@@ -93,7 +127,7 @@ new.ccdir <- function(cc.dir) {
 #' @param as.F Return the F values, calculated from the C14 ages (columns 2 and 3). Defaults to \code{as.F=FALSE}.
 #' @param as.pMC Return the pMC values, calculated from the C14 ages (columns 2 and 3). Defaults to \code{as.pMC=FALSE}.
 #' @param as.Delta If loading a curve that contains 2 additional columns containing the D14C values, then these can be returned instead of the curve's C14 ages and errors. Defaults to \code{as.Delta=FALSE}.
-#' @param decimals Number of decimals to report when as.F=TRUE. Defaults to 8.
+#' @param decimals Number of decimals to report when as.F=TRUE. Defaults to no rounding (\code{decimals=Inf}).
 #' @examples
 #' intcal20 <- ccurve(1)
 #' marine20 <- ccurve(2)
@@ -101,21 +135,28 @@ new.ccdir <- function(cc.dir) {
 #' marine98 <- ccurve("Marine98")
 #' pb.sh3 <- ccurve("sh3")
 #' @references
+#'
+# Andrews, A.H, Siciliano, D., Potts, D.C, DeMartini, E.E., Covarrubias, S. 2016. Bomb radiocarbon and the Hawaiian Archipelago: Coral, otoliths and seawater. Radiocarbon 58, 531-548, \doi{10.1017/RDC.2016.32}
+#'
+#' Arnold, J.R., Libby, W.F. 1951. Radiocarbon dates. Science 113, 111-120, \doi{10.1126/science.113.2927.111}
+#'
 #' Emmenegger, L., Leuenberger, M., Steinbacher, M. 2024. ICOS ATC 14C Release analysed by ICOS CRL from Jungfraujoch (6.0 m), 2015-09-21–2023-10-02, ICOS RI, \url{https://hdl.handle.net/11676/6c_RZ7NHc2dnZv7d84BMY_YY}
 #'
 #' Hammer, S., Levin, I. 2017. Monthly mean atmospheric D14CO2 at Jungfraujoch and Schauinsland from 1986 to 2016. heiDATA: Heidelberg Research Data Repository V2 \doi{10.11588/data/10100}
 #'
-#' Heaton, T.J., Köhler, P., Butzin, M., Bard, E., Reimer, R., Austin, W., Bronk Ramsey, C., Grootes, P, Hughen, K.A., Kromer, B., Reimer, P.J., Adkins, J., Burke, A., Cook, M., Olsen, J., Skinner, L. 2020. Marine20 - the marine radiocarbon age calibration curve (0–55,000 cal BP), \doi{10.1017/RDC.2020.68}
+#' Heaton, T.J., Köhler, P., Butzin, M., Bard, E., Reimer, R., Austin, W., Bronk Ramsey, C., Grootes, P, Hughen, K.A., Kromer, B., Reimer, P.J., Adkins, J., Burke, A., Cook, M., Olsen, J., Skinner, L. 2020. Marine20 - the marine radiocarbon age calibration curve (0–55,000 cal BP). Radiocarbon 62, 779-820, \doi{10.1017/RDC.2020.68}
 #'
 #' Hogg, A.G., Hua, Q., Blackwell, P.G., Mu, N., Buck, C.E., Guilderson, T.P., Heaton, T.J., Palmer, J.G., Reimer, P.J., Reimer, R., Turney, C.S.M., Zimmerman, S.R.H. 2013. SHCal13 Southern Hemisphere Calibration, 0-50,000 Years cal BP. Radiocarbon 55, 1889-1903, \doi{10.2458/azu_js_rc.55.16783}
 #'
 #' Hogg, A., Heaton, T.J., Hua, Q., Palmer, P.J., Turney, C.S.M., Southon, J., Bayliss, A., Blackwell, P., Boswijk, G., Bronk Ramsey, C., Petchey, F., Reimer, P.J., Reimer, R., Wacker, L. 2020. SHCal20 Southern Hemisphere calibration, 0-55,000 years cal BP. Radiocarbon 62, 759-778, \doi{10.1017/RDC.2020.59}
 #'
+#' Hughen, K.A., Baillie, M.G.L., Bard, E., Beck, J.W., Bertrand, C.J.H., Blackwell, P.G., Buck, C.E., Burr, G.S., Cutler, K.B., Damon, P.E., Edwards, R.L., Fairbanks, R.G., Friedrich, M., Guilderson, T.P., Kromer, B., McCormac, G., Manning, S., Bronk Ramsey, C., Reimer, P.J., Reimer, R.W., Remmele, S., Southon, J.R., Stuiver, M., Talamo, S., Taylor, F.W., van der Plicht, J., Weyhenmeyer, C.E., 2004. Marine04 marine radiocarbon age calibration, 0-26 cal kyr BP. Radiocarbon 46, 1059-1086 \doi{10.1017/s0033822200033002}
+#'
 #' Hua, Q., Barbetti, M., Rakowski, A.Z. 2013. Atmospheric radiocarbon for the period 1950-2010. Radiocarbon 55(4), \doi{10.2458/azu_js_rc.v55i2.16177}
 #' 
 #' Hua, Q., Turnbull, J.C., Santos, G.M., Rakowski, A.Z., Ancapichún, S., De Pol-Holz, R., Hammer, S., Lehman, S.J., Levin, I., Miller, J.B., Palmer, J.G., Turney, C.S.M. 2022. Atmospheric radiocarbon for the period 1950-2019. Radiocarbon 64(4), 723-745, \doi{10.1017/RDC.2021.95}
 #'
-#' Levin, I., Kromer, B. 2004. The tropospheric 14CO2 level in mid latitudes of the Northern Hemisphere. Radiocarbon 46, 1261-1272, \doi{10.1017/S0033822200033130}
+#' Levin, I., Kromer, B., 2004. The tropospheric 14CO2 level in mid latitudes of the Northern Hemisphere. Radiocarbon 46, 1261-1272, \doi{10.1017/S0033822200033130}
 #'
 #' Pearson, G.W., Stuiver, M., 1986. High-precision calibration of the radiocarbon time scale, 500–2500 BC. Radiocarbon 28, 839–862, \doi{10.1017/S0033822200060173}
 #'
@@ -127,111 +168,47 @@ new.ccdir <- function(cc.dir) {
 #'
 #' Reimer, P.J., Austin, W.E., Bard, E., Bayliss, A., Blackwell, P.G., Bronk Ramsey, C., Butzin, M., Cheng, H., Edwards, R.L., Friedrich, M., Grootes, P.M., Guilderson, T.P., Hajdas, I., Heaton, T.J., Hogg, A.G., Hughen, K.A., Kromer, B., Manning, S.W., Muscheler, R., Palmer, J.G., Pearson, C.L., van der Plicht, J., Reimer, R.W., Richards, D.A., Scott, E.M., Southon, J.R., Turney, C.S., Wacker, L., Adolphi, F., Büntgen, U., Capano, M., Fahrni, S.M., Fogtmann-Schulz, A., Friedrich, R., Köhler, P., Kudsk, S.G., Miyake, F., Olsen, J., Reinig, F., Sakamoto, M., Sookdeo, A., Talamo, S. 2020. The IntCal20 northern hemisphere radiocarbon age calibration curve (0–55 cal kBP). Radiocarbon 62, 725-757, \doi{10.1017/RDC.2020.41}
 #'
-#' Stuiver, M., Reimer, P.J., Bard, E., Beck, J.W., Burr, G.S., Hughen, K.A., Kromer, B., McCormac, G., Plicht, J.V., Spurk, M. 1998. INTCAL98 radiocarbon age calibration, 24,000–0 cal BP. Radiocarbon 40, 1041-1083, \doi{10.1017/S0033822200019123}
+#' Stuiver, M., Reimer, P.J., Braziunas, T.F., 1998. High-precision radiocarbon age calibration for terrestrial and marine samples. Radiocarbon 40, 1127-1151, \doi{10.1017/S0033822200019172}
 #'
 #' Stuiver, Suess, H., 1966. On the relationship between radiocarbon dates and true samples ages. Radiocarbon 8, 534-540, \doi{10.1017/S0033822200000345}
 #' 
 #' van der Plicht, J., Beck, J.W., Bard, E., Baillie, M.G.L., Blackwell, P.G., Buck, C.E., Friedrich, M., Guilderson, T.P., Hughen, K.A., Kromer, B., McCormac, F.G., Bronk Ramsey, C., Reimer, P.J., Reimer, R., Remmele, S., Richards, D.A., Southon, J.R., Stuiver, M., Weyhenmeyer, C.E., 2004. NotCal04—comparison/calibration 14C records 26–50 cal Kyr BP. Radiocarbon 46, 1225-1238, \doi{10.1017/S0033822200033117}
 #' @export
-ccurve <- function(cc=1, postbomb=FALSE, cc.dir=NULL, resample=0, glue=FALSE, as.F=FALSE, as.pMC=FALSE, as.Delta=FALSE, decimals=8) {
+ccurve <- function(cc=1, postbomb=FALSE, cc.dir=NULL, resample=0, glue=FALSE, as.F=FALSE, as.pMC=FALSE, as.Delta=FALSE, decimals=Inf) {
   if(sum(c(as.F, as.pMC, as.Delta)) > 1)
     stop("only one of as.F, as.pMC or as.Delta can be set to TRUE")
-  if(postbomb) {
-    if(cc==1 || tolower(cc) == "nh1")
-      fl <- "postbomb_NH1.14C" else
-      if(cc==2 || tolower(cc) == "nh2")
-        fl <- "postbomb_NH2.14C" else
-        if(cc==3 || tolower(cc) == "nh3")
-          fl <- "postbomb_NH3.14C" else
-          if(cc==4 || tolower(cc) == "sh1-2")
-            fl <- "postbomb_SH1-2.14C" else
-            if(cc==5 || tolower(cc) == "sh3")
-              fl <- "postbomb_SH3.14C" else
-              if(tolower(cc) == "nh1_monthly")
-                fl <- "postbomb_NH1_monthly.14C" else
-                if(tolower(cc) == "nh2_monthly")
-                  fl <- "postbomb_NH2_monthly.14C" else
-                  if(tolower(cc) == "nh3_monthly")
-                    fl <- "postbomb_NH3_monthly.14C" else
-                    if(tolower(cc) == "sh1-2_monthly")
-                      fl <- "postbomb_SH1-2_monthly.14C" else
-                      if(tolower(cc) == "sh3_monthly")
-                        fl <- "postbomb_SH3_monthly.14C" else
-                        if(tolower(cc) == "kure")
-                          fl <- "Kure.14C" else
-                          if(tolower(cc) == "levinkromer")
-                            fl <- "LevinKromer.14C" else
-                            if(tolower(cc) == "santos")
-                              fl <- "Santos.14C" else
-                              if(tolower(cc) == "jungfraujoch")
-                                fl <- "Jungfraujoch.14C" else
-                                  stop("cannot find this postbomb curve\n", call.=FALSE)
-    }  else 
-        if(cc==1 || tolower(cc) == "intcal20")
-          fl <- "intcal20.14c" else # was 3Col_intcal20.14C
-          if(cc==2 || tolower(cc) == "marine20")
-            fl <- "marine20.14c" else # was 3Col_marine20.14C
-            if(cc==3 || tolower(cc) == "shcal20")
-              fl <- "shcal20.14c" else # was 3Col_shcal20.14C
-              if(cc==4 || tolower(cc) == "mixed")
-                fl <- "mixed.14C" else
-                if(tolower(cc) == "nh1")
-                  fl <- "postbomb_NH1.14C" else
-                  if(tolower(cc) == "nh2")
-                    fl <- "postbomb_NH2.14C" else
-                    if(tolower(cc) == "nh3")
-                      fl <- "postbomb_NH3.14C" else
-                      if(tolower(cc) == "sh1-2")
-                        fl <- "postbomb_SH1-2.14C" else
-                        if(tolower(cc) == "sh3")
-                          fl <- "postbomb_SH3.14C" else
-                           if(tolower(cc) == "nh1_monthly")
-                            fl <- "postbomb_NH1_monthly.14C" else
-                            if(tolower(cc) == "nh2_monthly")
-                              fl <- "postbomb_NH2_monthly.14C" else
-                              if(tolower(cc) == "nh3_monthly")
-                                fl <- "postbomb_NH3_monthly.14C" else
-                                if(tolower(cc) == "sh1-2_monthly")
-                                  fl <- "postbomb_SH1-2_monthly.14C" else
-                                  if(tolower(cc) == "sh3_monthly")
-                                    fl <- "postbomb_SH3_monthly.14C" else
-                                    if(tolower(cc) == "kure")
-                                      fl <- "kure.14C" else
-                                      if(tolower(cc) == "levinkromer")
-                                       fl <- "LevinKromer.14C" else
-                                       if(tolower(cc) == "santos")
-                                         fl <- "Santos.14C" else
-                                         if(tolower(cc) == "jungfraujoch")
-                                           fl <- "Jungfraujoch.14C" else
-                                           if(tolower(cc) == "mixed")
-                                             fl <- "mixed.14C" else
-										     if(tolower(cc) == "arnold_libby_1951")
-											   fl <- "Arnold_Libby_1951.14C" else
-                                               if(tolower(cc) == "stuiver_suess_1966")
-                                                 fl <- "Stuiver_Suess_1966.14C" else
-	                                     		 if(tolower(cc) == "pearson_stuiver_1986")
-												   fl <- "Pearson_Stuiver_1986.14C" else
-                                                   if(tolower(cc) == "notcal04")
-                                                     fl <- "NOTCal04.14C" else
-                                                     if(tolower(cc) == "intcal13")
-                                                       fl <- "3Col_intcal13.14C" else
-                                                       if(tolower(cc) == "marine13")
-                                                         fl <- "3Col_marine13.14C" else
-                                                         if(tolower(cc) == "shcal13")
-                                                           fl <- "3Col_shcal13.14C" else
-                                                           if(tolower(cc) == "intcal09")
-                                                             fl <- "3Col_intcal09.14C" else
-                                                             if(tolower(cc) == "marine09")
-                                                               fl <- "3Col_marine09.14C" else
-                                                               if(tolower(cc) == "intcal04")
-                                                                 fl <- "3Col_intcal04.14C" else
-                                                                 if(tolower(cc) == "marine04")
-                                                                   fl <- "3Col_marine04.14C" else
-                                                                   if(tolower(cc) == "intcal98")
-                                                                     fl <- "3Col_intcal98.14C" else
-                                                                     if(tolower(cc) == "marine98")
-                                                                       fl <- "3Col_marine98.14C" else
-                                                                         stop("cannot find this curve", call.=FALSE)
+  
+  cc.files <- c(nh1="postbomb_NH1.14C", nh2="postbomb_NH2.14C", 
+    nh3="postbomb_NH3.14C", "sh1-2"="postbomb_SH1-2.14C", 
+    sh3="postbomb_SH3.14C", nh1_monthly="postbomb_NH1_monthly.14C",
+    nh2_monthly="postbomb_NH2_monthly.14C", nh3_monthly="postbomb_NH3_monthly.14C",
+    "sh1-2_monthly"="postbomb_SH1-2_monthly.14C", sh3_monthly="postbomb_SH3_monthly.14C",
+    kure="Kure.14C", levinkromer="LevinKromer.14C", 
+    jungfraujoch="Jungfraujoch.14C", intcal20="intcal20.14c", 
+    marine20="marine20.14c", shcal20="shcal20.14c", 
+    arnold_libby_1951="Arnold_Libby_1951.14C", stuiver_suess_1966="Stuiver_Suess_1966.14C",
+    pearson_stuiver_1986="Pearson_Stuiver_1986.14C", notcal04="NOTCal04.14C", 
+    mixed="mixed.14C", intcal13="3Col_intcal13.14C", 
+    marine13="3Col_marine13.14C", shcal13="3Col_shcal13.14C", 
+    intcal09="3Col_intcal09.14C", marine09="3Col_marine09.14C", 
+    intcal04="3Col_intcal04.14C", marine04="3Col_marine04.14C", 
+    intcal98="3Col_intcal98.14C", marine98="3Col_marine98.14C")
+
+  cc.id <- tolower(cc)  
+  fl <- NA
+  if(cc.id %in% names(cc.files)) # if we recognise the name...
+    fl <- cc.files[cc.id] else # then we take the corresponding filename
+      if(is.numeric(cc)) {
+        if(postbomb) {
+          if(cc %in% 1:5)
+            fl <- c("postbomb_NH1.14C", "postbomb_NH2.14C", "postbomb_NH3.14C",
+              "postbomb_SH1-2.14C", "postbomb_SH3.14C")[cc]
+        } else
+            if(cc %in% 1:3)
+              fl <- c("intcal20.14c", "marine20.14c", "shcal20.14c")[cc]
+      }
+  if(is.na(fl))
+    stop("cannot find this curve", call.=FALSE)
 
   if(length(cc.dir) == 0) # then look into the package's inst/extdata folder
     read.cc <- system.file("extdata/", fl, package='rintcal') else
@@ -287,7 +264,7 @@ ccurve <- function(cc=1, postbomb=FALSE, cc.dir=NULL, resample=0, glue=FALSE, as
 #' @param offset Any offset and error to be applied to \code{cc2} (default 0 +- 0). Entered as two columns (possibly of just one row), e.g. \code{offset=cbind(100,0)}
 #' @param round The entries can be rounded to a specified amount of decimals. Defaults to no rounding.
 #' @param sep Separator between fields (tab by default, "\\t")
-#' @param decimals Number of decimals to report when as.F=TRUE. Defaults to 8.
+#' @param decimals Number of decimals to report when as.F=TRUE. Defaults to no rounding.
 #' @return A file containing the custom-made calibration curve, based on calibration curves \code{cc1} and \code{cc2}.
 #' @examples
 #' tmpdir <- tempdir()
@@ -300,7 +277,7 @@ ccurve <- function(cc=1, postbomb=FALSE, cc.dir=NULL, resample=0, glue=FALSE, as
 #' # clean up:
 #' unlink(tmpdir)
 #' @export
-mix.ccurves <- function(proportion=.5, cc1="IntCal20", cc2="Marine20", postbomb1=FALSE, postbomb2=FALSE, as.F=FALSE, as.pMC=FALSE, name="mixed.14C", cc.dir=c(), thiscurve1=c(), thiscurve2=c(), save=FALSE, offset=cbind(0,0), round=c(), sep=" ", decimals=8) {
+mix.ccurves <- function(proportion=.5, cc1="IntCal20", cc2="Marine20", postbomb1=FALSE, postbomb2=FALSE, as.F=FALSE, as.pMC=FALSE, name="mixed.14C", cc.dir=c(), thiscurve1=c(), thiscurve2=c(), save=FALSE, offset=cbind(0,0), round=c(), sep=" ", decimals=Inf) {
   # place the IntCal curves within the same folder as the new curve:
   if(length(cc.dir) == 0)
     cc.dir <- tempdir()
@@ -348,19 +325,22 @@ mix.ccurves <- function(proportion=.5, cc1="IntCal20", cc2="Marine20", postbomb1
 #' @param as.pMC The curves can be returned as pMC values instead of the default C14. Make sure that if as.pMC=TRUE and you are using thiscurve1 and/or thiscurve2, that these curves are in pMC space already.
 #' @param as.Delta The curves can be returned as D14C values instead of the default C14. Make sure that if as.Delta=TRUE and you are using thiscurve1 and/or thiscurve2, that these curves are in Delta14C space already.
 #' @param cc.dir Directory of the calibration curves. Defaults to where the package's files are stored (system.file), but can be set to, e.g., \code{cc.dir="ccurves"}.
-#' @param decimals Number of decimals to report when as.F=TRUE. Defaults to 5.
+#' @param decimals Number of decimals to report when as.F=TRUE. Defaults to no rounding.
 #' @examples
 #' my.cc <- glue.ccurves()
 #' @export
-glue.ccurves <- function(prebomb="IntCal20", postbomb="NH1", thisprebombcurve=c(), thispostbombcurve=c(), as.F=FALSE, as.pMC=FALSE, as.Delta=FALSE, cc.dir=c(), decimals=8) {
-  if(length(thispostbombcurve) == 0)
-    postbomb <- ccurve(postbomb, TRUE, cc.dir=cc.dir, as.F=as.F, as.pMC=as.pMC, as.Delta=as.Delta, decimals=decimals) else
-      postbomb <- thispostbombcurve
-  if(length(thisprebombcurve) == 0)
-    prebomb <- ccurve(prebomb, FALSE, cc.dir=cc.dir, as.F=as.F, as.pMC=as.pMC, as.Delta=as.Delta, decimals=decimals) else
-      prebomb <- thisprebombcurve
+glue.ccurves <- function(prebomb="IntCal20", postbomb="NH1", thisprebombcurve=c(), thispostbombcurve=c(), as.F=FALSE, as.pMC=FALSE, as.Delta=FALSE, cc.dir=c(), decimals=Inf) {
+  if(is.logical(postbomb)) # has to be numeric (1 to 5) or a string
+    postbomb <- as.numeric(postbomb)
 
-  glued <- rbind(postbomb, prebomb)
+  if(length(thispostbombcurve) == 0)
+    postb <- ccurve(postbomb, TRUE, cc.dir=cc.dir, as.F=as.F, as.pMC=as.pMC, as.Delta=as.Delta, decimals=decimals) else
+      postb <- thispostbombcurve
+  if(length(thisprebombcurve) == 0)
+    preb <- ccurve(prebomb, FALSE, cc.dir=cc.dir, as.F=as.F, as.pMC=as.pMC, as.Delta=as.Delta, decimals=decimals) else
+      preb <- thisprebombcurve
+
+  glued <- rbind(postb, preb)
   glued <- glued[order(glued[,1]),]
   repeated <- which(diff(glued[,1]) == 0)
   if(length(repeated) > 0)
@@ -372,11 +352,11 @@ glue.ccurves <- function(prebomb="IntCal20", postbomb="NH1", thisprebombcurve=c(
 
 ### making a selection of realm functions available locally (for intcal.data, glue.ccurves, mix.ccurves and ccurve), to avoid need for circular loading of `rice`
 
-C14.F14C <- function(y, er, decimals=8, lambda=8033) {
+C14.F14C <- function(y, er, decimals=Inf, lambda=8033) {
   y <- as.matrix(y)
   er <- as.matrix(er)
   if(length(y) != length(er))
-    stop("y and er must have the same length.")	
+    stop("y and er must have the same length.")
   fy <- exp(-y / lambda)
     
   er1 <- abs(fy - exp(-(y - er) / lambda))
@@ -387,7 +367,7 @@ C14.F14C <- function(y, er, decimals=8, lambda=8033) {
 
 
 
-C14.pMC <- function(y, er, ratio=100, decimals=8, lambda=8033)
+C14.pMC <- function(y, er, ratio=100, decimals=Inf, lambda=8033)
   return(100*C14.F14C(y, er, decimals=decimals, lambda=lambda))
 
 
@@ -410,7 +390,7 @@ F14C.er.D14C <- function(F14C, er, t, lambda=5730/log(2)) {
 
 
 # internal function, adapted from the rice package. Expects y and er
-cc_C14toF14C <- function(cc, decimals=8, lambda=8033) {
+cc_C14toF14C <- function(cc, decimals=Inf, lambda=8033) {
   y <- cc[,2]
   er <- cc[,3]
   if(length(y) != length(er))
@@ -422,3 +402,16 @@ cc_C14toF14C <- function(cc, decimals=8, lambda=8033) {
   sdev <- pmax(er1, er2)
   return(round(cbind(cc[,1], fy, sdev, deparse.level=0), decimals))
 }
+
+
+
+# internal function, copied (and renamed) from the rice package
+BCAD.calBP <- function(x, zero=FALSE)
+  if(zero)
+    return(1950 - x) else {
+      X <- 1950 - x
+      neg <- which(x < 0)
+      if(length(neg) > 0)
+        X[neg] <- 1949 - x[neg]
+      return(X)
+    }
